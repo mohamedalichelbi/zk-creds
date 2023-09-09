@@ -8,3 +8,4 @@ methods = { path = "../methods" }
 risc0-zkvm = { version = "0.17.0" }
 serde = "1.0"
 boa_engine = "0.17.0"
+rhai = "1.16.0"

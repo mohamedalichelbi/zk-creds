@@ -7,15 +7,26 @@ use risc0_zkvm::{
     serde::{to_vec, from_slice},
 };
 use std::time::Instant;
-use boa_engine::Source;
+use rhai::Engine;
 
 fn main() {
-    let js_code = "1 == 1";
-    let js_source = Source::from_bytes(&js_code);
+    let rhai_code = r#"
+    let credential = #{
+        "age": 19,
+    };
+    
+    fn check_age(cred) {
+        return cred["age"] > 18;
+    }
+    
+    check_age(credential);
+    "#;
+    let rhai_engine = Engine::new_raw();
+    let rhai_ast = rhai_engine.compile(rhai_code).unwrap();
 
     // First, we construct an executor environment
     let env = ExecutorEnv::builder()
-        .add_input(&to_vec(&js_source).unwrap())
+        .add_input(&to_vec(&rhai_code).unwrap())
         .build()
         .unwrap();
 
@@ -34,8 +45,8 @@ fn main() {
     println!("Receipt size {:.2} (KB)", (to_vec(&receipt).unwrap().len() / 1024));
 
     // Get guest result
-    let js_result: bool = from_slice(&receipt.journal).unwrap();
-    println!("Result: {:?}", js_result);
+    let code_result: bool = from_slice(&receipt.journal).unwrap();
+    println!("Result: {:?}", code_result);
 
     // TODO: Implement code for transmitting or serializing the receipt for
     // other parties to verify here
