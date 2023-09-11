@@ -1,0 +1,13 @@
+let res = await fetch("http://localhost:3000/prover/genproof/rhai", {
+  "headers": {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+  },
+  "body": JSON.stringify({
+      credentials: [JSON.stringify({"age": 19,})],
+      script: "credentials[0][\"age\"] >= 18;",
+  }),
+  "method": "POST",
+});
+let text = await res.json();
+console.log(text)
