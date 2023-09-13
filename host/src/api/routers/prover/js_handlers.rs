@@ -5,7 +5,7 @@ use risc0_zkvm::{
     serde::{to_vec, from_slice},
 };
 use std::time::Instant;
-use rhai::Engine;
+use boa_engine::Context;
 use axum::{Json, http::StatusCode};
 use serde::{Serialize, Deserialize};
 use serde_json::ser::to_string;
@@ -23,17 +23,16 @@ pub struct GenProofArgs {
     script: String,
 }
 
-pub async fn gen_rhai_proof(Json(payload): Json<GenProofArgs>) -> (StatusCode, Json<GenProofResponse>) {
+// basic handler that responds with a static string
+pub async fn gen_js_proof(Json(payload): Json<GenProofArgs>) -> (StatusCode, Json<GenProofResponse>) {    
     // TODO: proper API lifecycle
     // TODO: Simulate result with rhai engine to validate the script works correctly before trying to geenerate a zk-proof
     // TODO: compile outside of zkVM, only send serialized AST as input
-    //let rhai_engine = Engine::new_raw();
-    //let rhai_ast = rhai_engine.compile(rhai_code).unwrap();
 
     // First, we construct an executor environment
     let env = ExecutorEnv::builder()
         .add_input(&to_vec(&payload.credentials).unwrap())
-        .add_input(&to_vec(&ScriptLang::Rhai).unwrap())
+        .add_input(&to_vec(&ScriptLang::JavaScript).unwrap())
         .add_input(&to_vec(&payload.script).unwrap())
         .build()
         .unwrap();
