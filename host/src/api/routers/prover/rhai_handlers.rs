@@ -1,5 +1,5 @@
 use methods::{ZK_PROVER_ELF, ZK_PROVER_ID};
-use core::types::{ZkCommit, ScriptLang};
+use shared::types::{ZkCommit, ScriptLang};
 use risc0_zkvm::{
     Executor, ExecutorEnv,
     serde::{to_vec, from_slice},

@@ -1,4 +1,5 @@
 #![no_main]
+#![no_std]
 
 
 extern crate alloc;
@@ -7,11 +8,16 @@ use risc0_zkvm::{
     guest::env,
     sha::{self, Sha256},
 };
-use core::types::{ZkCommit, ScriptLang};
+use shared::types::{ZkCommit, ScriptLang};
 use rhai::Engine;
 use boa_engine::{Context, Source};
 use serde_json::{Value, de::from_str};
-use alloc::string::String;
+use alloc::{
+    string::{String, ToString},
+    vec::Vec,
+    slice::Iter,
+    format,
+};
 use base64ct::{Base64, Encoding};
 
 risc0_zkvm::guest::entry!(main);
