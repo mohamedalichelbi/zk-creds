@@ -6,6 +6,7 @@ use routers::{
     hello::hello_router,
     prover::prover_router,
     verifier::verifier_router,
+    ai::ai_router,
 };
 
 
@@ -13,7 +14,8 @@ pub async fn api_start() {
     let api_routes = Router::new()
         .nest("/hello", hello_router())
         .nest("/prover", prover_router())
-        .nest("/verifier", verifier_router());
+        .nest("/verifier", verifier_router())
+        .nest("/ai", ai_router());
 
     let addr = SocketAddr::from((
         IpAddr::V4(Ipv4Addr::LOCALHOST),

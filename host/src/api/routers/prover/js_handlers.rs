@@ -23,7 +23,7 @@ pub struct GenProofArgs {
     script: String,
 }
 
-// basic handler that responds with a static string
+// Generate a ZK-proof for running a JS program over credentials
 pub async fn gen_js_proof(Json(payload): Json<GenProofArgs>) -> (StatusCode, Json<GenProofResponse>) {    
     // TODO: proper API lifecycle
     // TODO: Simulate result with rhai engine to validate the script works correctly before trying to geenerate a zk-proof
