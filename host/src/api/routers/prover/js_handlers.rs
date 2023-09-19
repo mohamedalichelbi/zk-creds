@@ -1,5 +1,5 @@
 use methods::{ZK_PROVER_ELF, ZK_PROVER_ID};
-use shared::types::{ZkCommit, ScriptLang};
+use shared::types::{ZkCommit, ZkvmInput, ScriptLang};
 use risc0_zkvm::{
     Executor, ExecutorEnv,
     serde::{to_vec, from_slice},
@@ -31,9 +31,11 @@ pub async fn gen_js_proof(Json(payload): Json<GenProofArgs>) -> (StatusCode, Jso
 
     // First, we construct an executor environment
     let env = ExecutorEnv::builder()
-        .add_input(&to_vec(&payload.credentials).unwrap())
-        .add_input(&to_vec(&ScriptLang::JavaScript).unwrap())
-        .add_input(&to_vec(&payload.script).unwrap())
+        .add_input(&to_vec(&ZkvmInput {
+            credentials: payload.credentials,
+            lang: ScriptLang::JavaScript,
+            script: payload.script,
+        }).unwrap())
         .build()
         .unwrap();
 

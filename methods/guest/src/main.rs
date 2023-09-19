@@ -5,7 +5,7 @@ use risc0_zkvm::{
     guest::env,
     sha::{self, Sha256},
 };
-use shared::types::{ZkCommit, ScriptLang};
+use shared::types::{ZkCommit, ZkvmInput, ScriptLang};
 use rhai::{Engine, Scope, Dynamic};
 //use boa_engine::{Context, Source};
 use serde_json::{Value, de::from_str};
@@ -16,13 +16,14 @@ risc0_zkvm::guest::entry!(main);
 pub fn main() {
     // error flag
     let mut has_error = false;
-    
+
+    let inputs: ZkvmInput = env::read();
     // get credentials
-    let credentials: Vec<String> = env::read();
+    let credentials: Vec<String> = inputs.credentials;
     // get script
-    let script_lang: ScriptLang = env::read();
+    let script_lang: ScriptLang = inputs.lang;
     // get script
-    let input_script: String = env::read();
+    let input_script: String = inputs.script;
 
     // validate that credentials are JSON objects
     for cred in credentials.iter() {
@@ -42,6 +43,7 @@ pub fn main() {
             has_error: true,
             err_msg: "failed to parse credentials".to_string(),
             cred_hashes: Vec::new(),
+            lang: inputs.lang,
             script: input_script,
             result: false,
         });
@@ -77,6 +79,7 @@ pub fn main() {
                     has_error: true,
                     err_msg: format!("script error: {}", raw_result.err().unwrap()),
                     cred_hashes,
+                    lang: inputs.lang,
                     script: input_script,
                     result: false,
                 });
@@ -88,6 +91,7 @@ pub fn main() {
                 has_error: false,
                 err_msg: "".to_string(),
                 cred_hashes,
+                lang: inputs.lang,
                 // IMPORTANT!! use input script here to not expose credentials
                 script: input_script,
                 result: raw_result.unwrap(),
