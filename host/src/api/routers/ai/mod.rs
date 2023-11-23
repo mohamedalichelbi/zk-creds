@@ -68,12 +68,8 @@ pub async fn gen_script(Json(payload): Json<GenScriptArgs>) -> (StatusCode, Json
     msgs.push(ChatCompletionRequestMessage {
         role: Role::Assistant,
         content: Option::Some( match payload.lang {
-            ScriptLang::Rhai => r#"
-                (credentials[0]["age"] >= 18) && (credentials[1]["data"]["country"] == "Germany")
-                "#.to_string(),
-            ScriptLang::JavaScript => r#"
-                (credentials[0]["age"] >= 18) && (credentials[1]["data"]["country"] == "Germany")
-                "#.to_string(),
+            ScriptLang::Rhai => r#"(credentials[0]["age"] >= 18) && (credentials[1]["data"]["country"] == "Germany")"#.to_string(),
+            ScriptLang::JavaScript => r#"(credentials[0]["age"] >= 18) && (credentials[1]["data"]["country"] == "Germany")"#.to_string(),
         }),
         name: Option::None,
         function_call: Option::None
